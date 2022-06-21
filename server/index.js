@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/api/get", (req, res) => {
-  const sqlSelect = "SELECT MAX(DrugID) FROM `medicine`";
+  const sqlSelect = "SELECT DrugID FROM `medicine`";
   db.query(sqlSelect, (err, result) => {
     res.send(result);
   });

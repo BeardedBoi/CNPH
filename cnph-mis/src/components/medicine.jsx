@@ -13,9 +13,9 @@ function Medicine() {
   const [productionDate, setProductionDate] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
   const [price, setPrice] = useState("");
-  const [currentID, setCurrentID] = useState([]);
+  const [currentID, setCurrentID] = useState("");
   const [inputValue, setInputValue] = useState([]);
-  const [grabID, setGrabID] = useState("");
+  const [grabID, setGrabID] = useState(0);
 
   const { register, setValue } = useForm({
     defaultValues: {
@@ -25,14 +25,10 @@ function Medicine() {
 
   useEffect(() => {
     Axios.get("http://192.168.1.74:3001/api/get").then((response) => {
-      //console.log(response.data[0]);
-      setCurrentID(response.data[0]);
+      //console.log(response.data[response.data.length - 1].DrugID);
+      setCurrentID(response.data[response.data.length - 1].DrugID);
     });
   }, []);
-
-  const changeValue = (e) => {
-    setGrabID(e.target.value);
-  };
 
   const handleID = (e) => {
     setDrugID(e.target.value);
@@ -75,12 +71,14 @@ function Medicine() {
   const notify = () => {
     toast.success("Save successful!", {
       position: toast.POSITION.BOTTOM_RIGHT,
+      autoClose: 3000,
     });
+    refreshPage();
   };
 
   const verification = () => {
     if (
-      drugID === "" ||
+      currentID === "" ||
       drugName === "" ||
       brandName === "" ||
       category === "" ||
@@ -91,6 +89,10 @@ function Medicine() {
       toast.warn("Cannot leave empty fields chief!", {
         autoClose: 2000,
       });
+    } else if (expirationDate < productionDate) {
+      toast.warn("Expiration date cannot be lower that production date", {
+        autoClose: 2000,
+      });
     } else {
       submitForm();
     }
@@ -98,7 +100,7 @@ function Medicine() {
 
   const submitForm = () => {
     Axios.post("http://192.168.1.74:3001/api/medicineadd", {
-      drugID: drugID,
+      drugID: currentID + 1,
       drugName: drugName,
       brandName: brandName,
       category: category,
@@ -109,7 +111,7 @@ function Medicine() {
       alert("success!");
     });
     notify();
-    resetInputField();
+    //refreshPage();
   };
 
   return (
@@ -132,6 +134,8 @@ function Medicine() {
                       min="0"
                       placeholder=""
                       id="txt1"
+                      value={currentID + 1}
+                      disabled
                       className="text-capitalize w-25 font-Comfortaa"
                       onChange={handleID}
                       {...register("getID")}
@@ -139,7 +143,7 @@ function Medicine() {
                     <Button
                       className="badge badge-primary"
                       onClick={() =>
-                        setValue("getID", JSON.stringify(currentID, null))
+                        setValue("getID", JSON.stringify(currentID + 1, null))
                       }
                     >
                       Get Latest ID
