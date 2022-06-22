@@ -99,23 +99,17 @@ function NavBar() {
 
                 {/* PURCHASE NAV DROP DOWN */}
                 <NavDropdown
-                  title="Purchase"
+                  title="Transactions"
                   id="navbarScrollingDropdown"
                   className="hover:bg-blue-400 rounded font-JosefinSans"
                 >
                   <NavDropdown.Item as={Link} to={"/transact"}>
-                    Purchase
+                    Issuance
                   </NavDropdown.Item>
                   <NavDropdown.Item as={Link} to={"/transact-search"}>
-                    Search Transaction
-                  </NavDropdown.Item>
-                  <NavDropdown.Item as={Link} to={"/transact-edit"}>
-                    Edit Transaction
+                    Assessment
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item as={Link} to={"/transact-delete"}>
-                    Delete Transaction
-                  </NavDropdown.Item>
                   <NavDropdown.Item as={Link} to={"/transact-history"}>
                     Transaction History
                   </NavDropdown.Item>

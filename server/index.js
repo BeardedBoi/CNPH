@@ -22,6 +22,13 @@ app.get("/api/get", (req, res) => {
   });
 });
 
+app.get("/api/searchmeds", (req, res) => {
+  const sqlSelect = "SELECT * FROM `medicine`";
+  db.query(sqlSelect, (err, result) => {
+    res.send(result);
+  });
+});
+
 app.post("/api/insert", (req, res) => {
   const patientID = req.body.patientID;
   const patientName = req.body.patientName;
