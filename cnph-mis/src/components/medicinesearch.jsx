@@ -14,24 +14,9 @@ function Medicine() {
   const [expirationDate, setExpirationDate] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
-  const [currentID, setCurrentID] = useState("");
-
-  const { register, setValue } = useForm({
-    defaultValues: {
-      getID: "",
-    },
-  });
-
-  // useEffect(() => {
-  //   Axios.get("http://192.168.1.74:3001/api/searchmeds").then((response) => {
-  //     console.log(response.data[0]);
-  //     setCurrentID(response.data);
-  //   });
-  // }, []);
 
   const searchbyID = () => {
     Axios.get("http://192.168.1.74:3001/api/searchmeds").then((response) => {
-      //console.log(response.data[0]);
       setdrugName(response.data[(response.data.DrugID = drugID - 1)].DrugName);
       setBrandName(
         response.data[(response.data.DrugID = drugID - 1)].BrandName
@@ -69,6 +54,9 @@ function Medicine() {
   const handlePrice = (e) => {
     setPrice(e.target.value);
   };
+  const handleStock = (e) => {
+    setStock(e.target.value);
+  };
   const resetInputField = () => {
     setDrugID("");
     setdrugName("");
@@ -78,6 +66,7 @@ function Medicine() {
     setExpirationDate("");
     setPrice("");
   };
+
   return (
     <div>
       <div className="text-4xl text-green-500 my-5 font-bold text-center font-JosefinSans">
@@ -191,8 +180,8 @@ function Medicine() {
                     type="number"
                     id="txt7"
                     className="font-Comfortaa"
-                    value={price}
-                    onChange={handlePrice}
+                    value={stock}
+                    onChange={handleStock}
                     disabled
                   />
                 </Form.Group>
