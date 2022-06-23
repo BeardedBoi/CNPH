@@ -21,6 +21,7 @@ import Inventory from "./inventory";
 import MedicineSearch from "./medicinesearch";
 import MedicineEdit from "./medicineedit";
 import MedicineDelete from "./medicinedelete";
+import MedicineStocks from "./medicinestocks";
 
 function NavBar() {
   const [clockState, setClockState] = useState();
@@ -143,6 +144,7 @@ function NavBar() {
           <Route exact path="/medicine-edit" element={<MedicineEdit />} />
           <Route exact path="/medicine-delete" element={<MedicineDelete />} />
           <Route exact path="/patient-info" element={<Inventory />} />
+          <Route exact path="/medicine-stock" element={<MedicineStocks />} />
         </Routes>
       </div>
     </Router>

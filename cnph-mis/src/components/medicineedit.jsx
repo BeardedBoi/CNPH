@@ -4,7 +4,7 @@ import Axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function Medicine() {
+function MedicineEdit() {
   const [drugID, setDrugID] = useState("");
   const [drugName, setdrugName] = useState("");
   const [brandName, setBrandName] = useState("");
@@ -227,4 +227,4 @@ function Medicine() {
   );
 }
 
-export default Medicine;
+export default MedicineEdit;

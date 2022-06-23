@@ -101,9 +101,9 @@ function Medicine() {
       expirationDate: expirationDate,
       price: price,
     }).then(() => {
-      alert("success!");
+      notify();
     });
-    notify();
+
     //refreshPage();
   };
 
