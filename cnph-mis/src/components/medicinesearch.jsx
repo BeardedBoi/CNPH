@@ -1,9 +1,8 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component, useState } from "react";
 import { Container, Form, Row, Col, Button } from "react-bootstrap";
 import Axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useForm } from "react-hook-form";
 
 function Medicine() {
   const [drugID, setDrugID] = useState("");
@@ -57,16 +56,6 @@ function Medicine() {
   const handleStock = (e) => {
     setStock(e.target.value);
   };
-  const resetInputField = () => {
-    setDrugID("");
-    setdrugName("");
-    setBrandName("");
-    setCategory("");
-    setProductionDate("");
-    setExpirationDate("");
-    setPrice("");
-  };
-
   return (
     <div>
       <div className="text-4xl text-green-500 my-5 font-bold text-center font-JosefinSans">

@@ -24,6 +24,7 @@ import MedicineDelete from "./medicinedelete";
 
 function NavBar() {
   const [clockState, setClockState] = useState();
+  const hiddenState = true;
 
   useEffect(() => {
     setInterval(() => {
@@ -87,7 +88,7 @@ function NavBar() {
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item as={Link} to={"/medicine-delete"}>
-                    Delete Medicine
+                    Dispose
                   </NavDropdown.Item>
                   <NavDropdown.Item as={Link} to={"/medicine-expired"}>
                     See expired
@@ -120,12 +121,15 @@ function NavBar() {
               </Nav>
               <Form className="d-flex">
                 <FormControl
+                  hidden={hiddenState}
                   type="search"
                   placeholder="Search"
                   className="me-2"
                   aria-label="Search"
                 />
-                <Button variant="outline-success">Search</Button>
+                <Button variant="outline-success" hidden={hiddenState}>
+                  Search
+                </Button>
               </Form>
             </Navbar.Collapse>
           </Container>

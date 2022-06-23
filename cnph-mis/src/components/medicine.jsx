@@ -14,8 +14,6 @@ function Medicine() {
   const [expirationDate, setExpirationDate] = useState("");
   const [price, setPrice] = useState("");
   const [currentID, setCurrentID] = useState("");
-  const [inputValue, setInputValue] = useState([]);
-  const [grabID, setGrabID] = useState(0);
 
   const { register, setValue } = useForm({
     defaultValues: {
@@ -25,7 +23,6 @@ function Medicine() {
 
   useEffect(() => {
     Axios.get("http://192.168.1.74:3001/api/get").then((response) => {
-      //console.log(response.data[response.data.length - 1].DrugID);
       setCurrentID(response.data[response.data.length - 1].DrugID);
     });
   }, []);
@@ -51,10 +48,6 @@ function Medicine() {
   const handlePrice = (e) => {
     setPrice(e.target.value);
   };
-  const handleUserInput = (e) => {
-    setInputValue(e.target.value);
-  };
-
   const refreshPage = () => {
     window.location.reload();
   };
@@ -125,30 +118,26 @@ function Medicine() {
             <Col>
               <Row>
                 <Form.Group>
-                  <Form.Label className="my-1 font-Comfortaa">
-                    Drug ID
-                  </Form.Label>
                   <Col>
-                    <Form.Control
-                      type="text"
-                      min="0"
-                      placeholder=""
-                      id="txt1"
-                      value={currentID + 1}
-                      disabled
-                      className="text-capitalize w-25 font-Comfortaa"
-                      onChange={handleID}
-                      {...register("getID")}
-                    />
-                    <Button
-                      className="badge badge-primary"
-                      onClick={() =>
-                        setValue("getID", JSON.stringify(currentID + 1, null))
-                      }
-                    >
-                      Get Latest ID
-                    </Button>
+                    <Row>
+                      <Form.Label className="my-1 font-Comfortaa text-red-500">
+                        * ID is auto generated.
+                      </Form.Label>
+                      <Form.Label className="my-1 font-Comfortaa">
+                        Drug ID
+                      </Form.Label>
+                    </Row>
                   </Col>
+                  <Form.Control
+                    type="text"
+                    min="0"
+                    placeholder=""
+                    id="txt1"
+                    value={currentID + 1}
+                    disabled
+                    className="text-capitalize w-25 font-Comfortaa"
+                    onChange={handleID}
+                  />
                 </Form.Group>
                 <Form.Group>
                   <Form.Label className="my-1 font-Comfortaa">

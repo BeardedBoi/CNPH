@@ -29,6 +29,37 @@ app.get("/api/searchmeds", (req, res) => {
   });
 });
 
+app.put("/api/updatemeds", (req, res) => {
+  const drugID = req.body.drugID;
+  const drugName = req.body.drugName;
+  const brandName = req.body.brandName;
+  const category = req.body.category;
+  const productionDate = req.body.productionDate;
+  const expirationDate = req.body.expirationDate;
+  const price = req.body.price;
+  const sqlUpdate =
+    "UPDATE `medicine` SET DrugName = ?, BrandName = ?, Category = ?, ProductionDate = ?, ExpirationDate = ?, Price = ? WHERE DrugID = ?";
+  db.query(
+    sqlUpdate,
+    [
+      drugName,
+      brandName,
+      category,
+      productionDate,
+      expirationDate,
+      price,
+      drugID,
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
 app.post("/api/insert", (req, res) => {
   const patientID = req.body.patientID;
   const patientName = req.body.patientName;
