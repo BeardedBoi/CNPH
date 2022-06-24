@@ -15,6 +15,19 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//**********************************SEARCHING MEDS**********************************************************/
+app.get("/api/searchmeds", (req, res) => {
+  const sqlSelect = "SELECT * FROM `medicine`";
+  db.query(sqlSelect, (err, result) => {
+    res.send(result);
+  });
+});
+//******************************************************************************************************* */
+//
+//
+//
+
+//********************************* NEW MEDICINE ******************************************************************/
 app.get("/api/get", (req, res) => {
   const sqlSelect = "SELECT DrugID FROM `medicine`";
   db.query(sqlSelect, (err, result) => {
@@ -22,15 +35,39 @@ app.get("/api/get", (req, res) => {
   });
 });
 
+app.post("/api/medicineadd", (req, res) => {
+  const drugID = req.body.drugID;
+  const drugName = req.body.drugName;
+  const brandName = req.body.brandName;
+  const category = req.body.category;
+  const productionDate = req.body.productionDate;
+  const expirationDate = req.body.expirationDate;
+  const price = req.body.price;
+  const sqlInsert =
+    "INSERT INTO medicine (DrugID, DrugName, BrandName, Category, ProductionDate, ExpirationDate, Price) VALUES (?,?,?,?,?,?,?)";
+  db.query(
+    sqlInsert,
+    [
+      drugID,
+      drugName,
+      brandName,
+      category,
+      productionDate,
+      expirationDate,
+      price,
+    ],
+    (err, result) => {}
+  );
+  console.log(result);
+});
+//*******************************************************************************************************************/
+//
+//
+//
+
+//********************************* MEDICINE STOCKS ****************************************************************************/
 app.get("/api/stockret", (req, res) => {
   const sqlSelect = "SELECT StockID FROM `stock`";
-  db.query(sqlSelect, (err, result) => {
-    res.send(result);
-  });
-});
-
-app.get("/api/searchmeds", (req, res) => {
-  const sqlSelect = "SELECT * FROM `medicine`";
   db.query(sqlSelect, (err, result) => {
     res.send(result);
   });
@@ -41,37 +78,6 @@ app.get("/api/searchstock", (req, res) => {
   db.query(sqlSelect, (err, result) => {
     res.send(result);
   });
-});
-
-app.put("/api/updatemeds", (req, res) => {
-  const drugID = req.body.drugID;
-  const drugName = req.body.drugName;
-  const brandName = req.body.brandName;
-  const category = req.body.category;
-  const productionDate = req.body.productionDate;
-  const expirationDate = req.body.expirationDate;
-  const price = req.body.price;
-  const sqlUpdate =
-    "UPDATE `medicine` SET DrugName = ?, BrandName = ?, Category = ?, ProductionDate = ?, ExpirationDate = ?, Price = ? WHERE DrugID = ?";
-  db.query(
-    sqlUpdate,
-    [
-      drugName,
-      brandName,
-      category,
-      productionDate,
-      expirationDate,
-      price,
-      drugID,
-    ],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(result);
-      }
-    }
-  );
 });
 
 app.put("/api/updatestock", (req, res) => {
@@ -118,16 +124,13 @@ app.post("/api/newstock", (req, res) => {
   );
 });
 
-app.post("/api/insert", (req, res) => {
-  const patientID = req.body.patientID;
-  const patientName = req.body.patientName;
+//******************************************************************************************************************************* */
+//
+//
+//
 
-  const sqlInsert = "INSERT INTO patient (PatientID, PatientName) VALUES (?,?)";
-  db.query(sqlInsert, [patientID, patientName], (err, result) => {});
-  console.log(result);
-});
-
-app.post("/api/medicineadd", (req, res) => {
+//**************************** UPDATE MEDS *******************************************************************************************/
+app.put("/api/updatemeds", (req, res) => {
   const drugID = req.body.drugID;
   const drugName = req.body.drugName;
   const brandName = req.body.brandName;
@@ -135,21 +138,88 @@ app.post("/api/medicineadd", (req, res) => {
   const productionDate = req.body.productionDate;
   const expirationDate = req.body.expirationDate;
   const price = req.body.price;
-  const sqlInsert =
-    "INSERT INTO medicine (DrugID, DrugName, BrandName, Category, ProductionDate, ExpirationDate, Price) VALUES (?,?,?,?,?,?,?)";
+  const sqlUpdate =
+    "UPDATE `medicine` SET DrugName = ?, BrandName = ?, Category = ?, ProductionDate = ?, ExpirationDate = ?, Price = ? WHERE DrugID = ?";
   db.query(
-    sqlInsert,
+    sqlUpdate,
     [
-      drugID,
       drugName,
       brandName,
       category,
       productionDate,
       expirationDate,
       price,
+      drugID,
     ],
-    (err, result) => {}
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
   );
+});
+//**********************************************************************************************************************************/
+//
+//
+//
+
+//************************* ISSUANCE *******************************************************************************************************/
+app.get("/api/rettransactID", (req, res) => {
+  const sqlSelect = "SELECT TransactionID FROM `patient_assessment`";
+  db.query(sqlSelect, (err, result) => {
+    res.send(result);
+  });
+});
+
+app.get("/api/patientret", (req, res) => {
+  const sqlSelect = "SELECT * FROM `patient`";
+  db.query(sqlSelect, (err, result) => {
+    res.send(result);
+  });
+});
+
+app.post("/api/newissuance", (req, res) => {
+  const currenttransID = req.body.currenttransID;
+  const patientID = req.body.patientID;
+  const patientName = req.body.patientName;
+  const drugID = req.body.drugID;
+  const drugName = req.body.drugName;
+  const quantity = req.body.quantity;
+  const total = req.body.total;
+  const date = req.body.date;
+  const sqlUpdate =
+    "INSERT INTO patient_assessment (PatientID, PatientName, DrugID, DrugName, Quantity, Cost, TransactionID, TransactionDate) VALUES (?,?,?,?,?,?,?,?)";
+  db.query(
+    sqlUpdate,
+    [
+      patientID,
+      patientName,
+      drugID,
+      drugName,
+      quantity,
+      total,
+      currenttransID,
+      date,
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+//***************************************************************************************************************************************/
+
+app.post("/api/insert", (req, res) => {
+  const patientID = req.body.patientID;
+  const patientName = req.body.patientName;
+
+  const sqlInsert = "INSERT INTO patient (PatientID, PatientName) VALUES (?,?)";
+  db.query(sqlInsert, [patientID, patientName], (err, result) => {});
   console.log(result);
 });
 

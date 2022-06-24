@@ -22,6 +22,7 @@ import MedicineSearch from "./medicinesearch";
 import MedicineEdit from "./medicineedit";
 import MedicineDelete from "./medicinedelete";
 import MedicineStocks from "./medicinestocks";
+import Issuance from "./issuance";
 
 function NavBar() {
   const [clockState, setClockState] = useState();
@@ -105,7 +106,7 @@ function NavBar() {
                   id="navbarScrollingDropdown"
                   className="hover:bg-blue-400 rounded font-JosefinSans"
                 >
-                  <NavDropdown.Item as={Link} to={"/transact"}>
+                  <NavDropdown.Item as={Link} to={"/issuance"}>
                     Issuance
                   </NavDropdown.Item>
                   <NavDropdown.Item as={Link} to={"/transact-search"}>
@@ -145,6 +146,7 @@ function NavBar() {
           <Route exact path="/medicine-delete" element={<MedicineDelete />} />
           <Route exact path="/patient-info" element={<Inventory />} />
           <Route exact path="/medicine-stock" element={<MedicineStocks />} />
+          <Route exact path="/issuance" element={<Issuance />} />
         </Routes>
       </div>
     </Router>
