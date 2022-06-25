@@ -212,6 +212,20 @@ app.post("/api/newissuance", (req, res) => {
     }
   );
 });
+
+app.put("/api/updateissuance", (req, res) => {
+  const drugID = req.body.drugID;
+  const stock = req.body.stock;
+  const quantity = req.body.quantity;
+  const sqlUpdate = "UPDATE medicine SET Stock = Stock - ? WHERE DrugID = ?";
+  db.query(sqlUpdate, [quantity, drugID], (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
 //***************************************************************************************************************************************/
 
 app.post("/api/insert", (req, res) => {

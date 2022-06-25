@@ -85,8 +85,17 @@ function Issuance() {
       currenttransID: currenttransID + 1,
       date: date,
     }).then(() => {
+      updatestock();
       notify();
     });
+  };
+
+  const updatestock = () => {
+    Axios.put("http://192.168.1.74:3001/api/updateissuance", {
+      quantity: quantity,
+      stock: stock,
+      drugID: drugID,
+    }).then(() => {});
   };
 
   return (
@@ -234,7 +243,7 @@ function Issuance() {
                   className="badge badge-primary w-25 h-10"
                   onClick={submitForm}
                 >
-                  Add Stock
+                  Confirm
                 </Button>
               </Row>
             </Col>
