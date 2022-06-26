@@ -237,6 +237,20 @@ app.post("/api/insert", (req, res) => {
   console.log(result);
 });
 
+app.get("/api/retdrugname", (req, res) => {
+  const sqlSelect = "SELECT DrugName FROM `medicine`";
+  db.query(sqlSelect, (err, result) => {
+    res.send(result);
+  });
+});
+
+app.get("/api/assessmentret", (req, res) => {
+  const sqlSelect = "SELECT * FROM `patient_assessment`";
+  db.query(sqlSelect, (err, result) => {
+    res.send(result);
+  });
+});
+
 app.listen(3001, () => {
   console.log("running on port 3001");
 });
