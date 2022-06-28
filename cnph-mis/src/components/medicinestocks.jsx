@@ -7,9 +7,6 @@ import "react-toastify/dist/ReactToastify.css";
 function MedicineStock() {
   const [drugID, setDrugID] = useState("");
   const [drugName, setdrugName] = useState("");
-  const [pcs, setPcs] = useState(0);
-  const [bundles, setBundles] = useState(0);
-  const [boxes, setBoxes] = useState(0);
   const [newpcs, setnewPcs] = useState(0);
   const [newbundles, setnewBundles] = useState(0);
   const [newboxes, setnewBoxes] = useState(0);
@@ -17,6 +14,9 @@ function MedicineStock() {
   const [currentID, setCurrentID] = useState("");
   const [stockID, setStockID] = useState("");
   const [compName, setcompName] = useState("");
+  const [proddate, setproddate] = useState("");
+  const [expdate, setexpdate] = useState("");
+  const [addtotal, setaddtotal] = useState(0);
 
   useEffect(() => {
     Axios.get("http://192.168.1.74:3001/api/stockret").then((response) => {
@@ -32,9 +32,6 @@ function MedicineStock() {
   const searchdrugID = () => {
     Axios.get("http://192.168.1.74:3001/api/searchmeds").then((response) => {
       setdrugName(response.data[(response.data.DrugID = drugID - 1)].DrugName);
-      setPcs(response.data[(response.data.DrugID = drugID - 1)].Storage);
-      setBoxes(response.data[(response.data.DrugID = drugID - 1)].Box);
-      setBundles(response.data[(response.data.DrugID = drugID - 1)].Bundles);
       setTotal(response.data[(response.data.DrugID = drugID - 1)].Stock);
     });
   };
@@ -44,15 +41,6 @@ function MedicineStock() {
   };
   const handleName = (e) => {
     setdrugName(e.target.value);
-  };
-  const handlepcs = (e) => {
-    setPcs(e.target.value);
-  };
-  const handlebundle = (e) => {
-    setBundles(e.target.value);
-  };
-  const handleboxes = (e) => {
-    setBoxes(e.target.value);
   };
   const handlenewpcs = (e) => {
     setnewPcs(e.target.value);
@@ -70,11 +58,46 @@ function MedicineStock() {
     setStockID(e.target.value);
   };
 
+  const handleproddate = (e) => {
+    setproddate(e.target.value);
+  };
+
+  const handleexpdate = (e) => {
+    setexpdate(e.target.value);
+  };
+
+  const handleaddstock = () => {
+    setaddtotal(newpcs * 1 + newbundles * 10 + newboxes * 100);
+  };
+
   const notify = () => {
     toast.success("Successfully Added", {
       position: toast.POSITION.BOTTOM_RIGHT,
       autoClose: 3000,
     });
+    refreshPage();
+  };
+
+  const refreshPage = () => {
+    window.location.reload();
+  };
+
+  const verification = () => {
+    if (compName === "" || proddate === "" || expdate === "") {
+      toast.warn("Do not leave empty fields chief!", {
+        autoClose: 2000,
+      });
+    } else if (expdate < proddate) {
+      toast.warn("Expiration date cannot be lower that production date", {
+        autoClose: 2000,
+      });
+    } else if (newpcs === 0 && newbundles === 0 && newboxes === 0) {
+      toast.warn("Really?", {
+        autoClose: 2000,
+      });
+    } else {
+      submitForm();
+    }
   };
 
   const submitForm = () => {
@@ -99,6 +122,9 @@ function MedicineStock() {
       newbundles: newbundles,
       newboxes: newboxes,
       compName: compName,
+      proddate: proddate,
+      expdate: expdate,
+      addtotal: addtotal,
     }).then(() => {});
   };
 
@@ -154,40 +180,6 @@ function MedicineStock() {
                     <Form.Label className="font-Comfortaa my-2">
                       Current Stock
                     </Form.Label>
-                    <Col>
-                      <Form.Label className="font-Comfortaa">pcs</Form.Label>
-                      <Form.Control
-                        type="number"
-                        className="font-Comfortaa"
-                        value={pcs}
-                        onChange={handlepcs}
-                        disabled
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label className="font-Comfortaa">
-                        bundles
-                      </Form.Label>
-                      <Form.Control
-                        type="number"
-                        className="font-Comfortaa "
-                        value={bundles}
-                        onChange={handlebundle}
-                        disabled
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label className="font-Comfortaa">box</Form.Label>
-                      <Form.Control
-                        type="number"
-                        className="font-Comfortaa"
-                        value={boxes}
-                        onChange={handleboxes}
-                        disabled
-                      />
-                    </Col>
-                    <Form className="my-1"></Form>
-                    <Form.Label className="font-Comfortaa">Total</Form.Label>
                     <Form.Control
                       type="number"
                       className="font-Comfortaa w-25 mx-3"
@@ -229,40 +221,85 @@ function MedicineStock() {
                   <Form className="my-2"></Form>
                   <Row>
                     <Col>
-                      <Form.Label className="font-Comfortaa">pcs</Form.Label>
+                      <Form.Label className="font-Comfortaa">
+                        Production Date
+                      </Form.Label>
                       <Form.Control
-                        type="number"
+                        type="date"
                         className="font-Comfortaa"
-                        value={newpcs}
-                        onChange={handlenewpcs}
+                        value={proddate}
+                        onChange={handleproddate}
                       />
                     </Col>
                     <Col>
                       <Form.Label className="font-Comfortaa">
-                        bundles
+                        Expiration Date
+                      </Form.Label>
+                      <Form.Control
+                        type="date"
+                        className="font-Comfortaa"
+                        value={expdate}
+                        onChange={handleexpdate}
+                      />
+                    </Col>
+                  </Row>
+                  <Form className="my-2"></Form>
+                  <Row>
+                    <Col>
+                      <Form.Label className="font-Comfortaa">pcs</Form.Label>
+                      <Form.Control
+                        type="number"
+                        className="font-Comfortaa"
+                        min="0"
+                        value={newpcs}
+                        onChange={handlenewpcs}
+                        onKeyUp={handleaddstock}
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label className="font-Comfortaa">
+                        bundles(*10)
                       </Form.Label>
                       <Form.Control
                         type="number"
                         className="font-Comfortaa "
+                        min="0"
                         value={newbundles}
                         onChange={handlenewbundles}
+                        onKeyUp={handleaddstock}
                       />
                     </Col>
                     <Col>
-                      <Form.Label className="font-Comfortaa">box</Form.Label>
+                      <Form.Label className="font-Comfortaa">
+                        box(*100)
+                      </Form.Label>
                       <Form.Control
                         type="number"
                         className="font-Comfortaa"
+                        min="0"
                         value={newboxes}
                         onChange={handlenewboxes}
+                        onKeyUp={handleaddstock}
                       />
                     </Col>
+                    <Row>
+                      <Form.Label className="font-Comfortaa my-2">
+                        Total
+                      </Form.Label>
+                      <Form.Control
+                        type="number"
+                        className="font-Comfortaa w-25 mx-3"
+                        value={addtotal}
+                        disabled
+                      />
+                      <Form.Label className="my-2 font-Comfortaa"></Form.Label>
+                    </Row>
                     <Form.Label className="my-2 font-Comfortaa"></Form.Label>
                   </Row>
                 </Form.Group>
                 <Button
                   className="badge badge-primary w-25 h-10"
-                  onClick={submitForm}
+                  onClick={verification}
                 >
                   Add Stock
                 </Button>

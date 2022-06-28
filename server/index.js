@@ -109,11 +109,26 @@ app.post("/api/newstock", (req, res) => {
   const boxes = req.body.newboxes;
   const compName = req.body.compName;
   const date = req.body.date;
+  const proddate = req.body.proddate;
+  const expdate = req.body.expdate;
+  const addtotal = req.body.addtotal;
   const sqlUpdate =
-    "INSERT INTO stock (StockID, StockDate, DrugID, DrugName, Pcs, Bundles, Box, CompanyName) VALUES (?,?,?,?,?,?,?,?)";
+    "INSERT INTO stock (StockID, StockDate, DrugID, DrugName, Pcs, Bundles, Box, CompanyName, ProductionDate, ExpirationDate, TotalStock) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
   db.query(
     sqlUpdate,
-    [stockID, date, drugID, drugName, pcs, bundles, boxes, compName],
+    [
+      stockID,
+      date,
+      drugID,
+      drugName,
+      pcs,
+      bundles,
+      boxes,
+      compName,
+      proddate,
+      expdate,
+      addtotal,
+    ],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -180,6 +195,15 @@ app.get("/api/patientret", (req, res) => {
   });
 });
 
+app.get("/api/fcfsmedret", (req, res) => {
+  const drugID = req.body.drugID;
+  const sqlSelect =
+    "SELECT * FROM `stock` WHERE ProductionDate IN (SELECT MIN(ProductionDate) FROM stock) AND DrugID = ? AND TotalStock > 0";
+  db.query(sqlSelect, [drugID], (err, result) => {
+    res.send(result);
+  });
+});
+
 app.post("/api/newissuance", (req, res) => {
   const currenttransID = req.body.currenttransID;
   const patientID = req.body.patientID;
@@ -226,6 +250,20 @@ app.put("/api/updateissuance", (req, res) => {
     }
   });
 });
+
+app.put("/api/updatepatientissuance", (req, res) => {
+  const patientID = req.body.patientID;
+  const total = req.body.total;
+  const sqlUpdate =
+    "UPDATE patient SET Pharmatotal = Pharmatotal + ? WHERE PatientID = ?";
+  db.query(sqlUpdate, [total, patientID], (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
 //***************************************************************************************************************************************/
 
 app.post("/api/insert", (req, res) => {
@@ -246,6 +284,20 @@ app.get("/api/retdrugname", (req, res) => {
 
 app.get("/api/assessmentret", (req, res) => {
   const sqlSelect = "SELECT * FROM `patient_assessment`";
+  db.query(sqlSelect, (err, result) => {
+    res.send(result);
+  });
+});
+
+app.get("/api/expiredret", (req, res) => {
+  const sqlSelect = "SELECT * FROM `stock` WHERE ExpirationDate < CURRENT_DATE";
+  db.query(sqlSelect, (err, result) => {
+    res.send(result);
+  });
+});
+
+app.get("/api/transactret", (req, res) => {
+  const sqlSelect = "SELECT * FROM patient_assessment";
   db.query(sqlSelect, (err, result) => {
     res.send(result);
   });

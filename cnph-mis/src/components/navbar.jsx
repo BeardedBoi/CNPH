@@ -27,6 +27,8 @@ import MedicineStocks from "./medicinestocks";
 import Issuance from "./issuance";
 import Assessment from "./assessment";
 import Axios from "axios";
+import ExpiredMeds from "./expiredmeds";
+import Transacthistory from "./transacthistory";
 
 function NavBar() {
   const [clockState, setClockState] = useState();
@@ -52,12 +54,14 @@ function NavBar() {
   const [listStock, setlistStock] = useState({ stck: [] });
   const [listpatientname, setlistpatientname] = useState({ ptnm: [] });
   const [listpatientid, setlistpatientid] = useState({ ptid: [] });
+  const [listpharmatotal, setlistpharmatotal] = useState({ phttl: [] });
   const [searchTerm, setsearchTerm] = useState("");
 
   useEffect(() => {
     Axios.get("http://192.168.1.74:3001/api/patientret").then((response) => {
       setlistpatientname({ ptnm: response.data });
       setlistpatientid({ ptid: response.data });
+      setlistpharmatotal({ phttl: response.data });
       console.log(response.data);
     });
   }, []);
@@ -170,6 +174,7 @@ function NavBar() {
                       <thead>
                         <th>Patient ID</th>
                         <th>Patient Name</th>
+                        <th>Pharmacy Total</th>
                       </thead>
                       <tbody>
                         <tr>
@@ -182,6 +187,13 @@ function NavBar() {
                             {Object.values(listpatientname.ptnm).map(
                               (value) => (
                                 <tr>{value.PatientName}</tr>
+                              )
+                            )}
+                          </td>
+                          <td>
+                            {Object.values(listpharmatotal.phttl).map(
+                              (value) => (
+                                <tr>₱{value.Pharmatotal}.00</tr>
                               )
                             )}
                           </td>
@@ -292,6 +304,8 @@ function NavBar() {
           <Route exact path="/medicine-stock" element={<MedicineStocks />} />
           <Route exact path="/issuance" element={<Issuance />} />
           <Route exact path="/assessment" element={<Assessment />} />
+          <Route exact path="/medicine-expired" element={<ExpiredMeds />} />
+          <Route exact path="/transact-history" element={<Transacthistory />} />
         </Routes>
       </div>
     </Router>

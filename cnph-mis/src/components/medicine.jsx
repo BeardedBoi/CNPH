@@ -75,8 +75,8 @@ function Medicine() {
       drugName === "" ||
       brandName === "" ||
       category === "" ||
-      productionDate === "" ||
-      expirationDate === "" ||
+      //productionDate === "" ||
+      // expirationDate === "" ||
       price === ""
     ) {
       toast.warn("Cannot leave empty fields chief!", {
@@ -97,8 +97,8 @@ function Medicine() {
       drugName: drugName,
       brandName: brandName,
       category: category,
-      productionDate: productionDate,
-      expirationDate: expirationDate,
+      // productionDate: productionDate,
+      //expirationDate: expirationDate,
       price: price,
     }).then(() => {
       notify();
@@ -179,7 +179,7 @@ function Medicine() {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className="my-1 font-Comfortaa">
+                  <Form.Label className="my-1 font-Comfortaa" hidden>
                     Production Date
                   </Form.Label>
                   <Form.Control
@@ -189,10 +189,11 @@ function Medicine() {
                     className="font-Comfortaa"
                     value={productionDate}
                     onChange={handlePDate}
+                    hidden
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className="my-1 font-Comfortaa">
+                  <Form.Label className="my-1 font-Comfortaa" hidden>
                     Expiration Date
                   </Form.Label>
                   <Form.Control
@@ -202,6 +203,7 @@ function Medicine() {
                     className="font-Comfortaa"
                     value={expirationDate}
                     onChange={handleEDate}
+                    hidden
                   />
                 </Form.Group>
                 <Form.Group>

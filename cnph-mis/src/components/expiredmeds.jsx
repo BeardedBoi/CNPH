@@ -12,41 +12,36 @@ import {
 import Axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./searchbar.css";
 
-function Assessment() {
+function ExpiredMeds() {
   const [listdrugnames, setlistdrugnames] = useState({ drNm: [] });
-  const [listpatientname, setlistpatientname] = useState({ ptnm: [] });
-  const [listpatientid, setlistpatientid] = useState({ ptid: [] });
-  const [listquantity, setlistquanity] = useState({ quan: [] });
-  const [listcost, setlistcost] = useState({ cost: [] });
-  const [listtransdate, setlisttransdate] = useState({ trdt: [] });
+  const [listdrugid, setlistdrugid] = useState({ drid: [] });
+  const [liststockid, setliststockid] = useState({ stid: [] });
+  const [liststockdate, setliststockdate] = useState({ stdt: [] });
+  const [liststock, setliststock] = useState({ stk: [] });
+  const [listexpdate, setlistexpdate] = useState({ exdt: [] });
   const [searchTerm, setsearchTerm] = useState("");
-  const [searchDate, setsearchDate] = useState("");
-  const [totalcost, settotalcost] = useState({ ttlcst: [] });
-  const [ptotalcost, setptotalcost] = useState("");
 
   useEffect(() => {
-    Axios.get("http://192.168.1.74:3001/api/assessmentret").then((response) => {
-      setlistpatientid({ ptid: response.data });
-      setlistpatientname({ ptnm: response.data });
+    Axios.get("http://192.168.1.74:3001/api/expiredret").then((response) => {
+      setliststockid({ stid: response.data });
+      setliststockdate({ stdt: response.data });
       setlistdrugnames({ drNm: response.data });
-      setlistquanity({ quan: response.data });
-      setlistcost({ cost: response.data });
-      setlisttransdate({ trdt: response.data });
+      setlistdrugid({ drid: response.data });
+      setliststock({ stk: response.data });
+      setlistexpdate({ exdt: response.data });
     });
   }, []);
 
-  useEffect(() => {
-    Axios.get("http://192.168.1.74:3001/api/patientret").then((response) => {
-      settotalcost({ ttlcst: response.data });
-    });
-  }, []);
+  const current = new Date();
+  const date = `${current.getFullYear()}-${
+    current.getMonth() + 1
+  }-${current.getDate()}`;
 
   return (
     <div>
       <div className="text-4xl text-green-500 my-5 font-bold text-center font-JosefinSans">
-        ASSESSMENT
+        EXPIRED MEDICINES
       </div>
       <div className="p-6 max-w-2xl bg-white rounded-xl shadow-lg flex items-center space-x-3 my-2 mx-auto">
         <Container>
@@ -58,7 +53,7 @@ function Assessment() {
                   <Row>
                     <Col>
                       <Form.Label className="my-1 font-Comfortaa ">
-                        Patient Name
+                        Search Drug Name
                       </Form.Label>
                       <Form.Control
                         type="TEXT"
@@ -69,7 +64,6 @@ function Assessment() {
                         }}
                       />
                     </Col>
-                    <Col></Col>
                   </Row>
                   <Form.Label className="my-1 font-Comfortaa"></Form.Label>
                 </Form.Group>
@@ -78,22 +72,22 @@ function Assessment() {
 
             <Table striped bordered hover size="sm">
               <thead>
-                <th>Patient ID</th>
-                <th>Patient Name</th>
+                <th>Stock ID</th>
+                <th>Stock Date</th>
+                <th>Drug ID</th>
                 <th>Drug Name</th>
-                <th>Quantity</th>
-                <th>Cost</th>
-                <th>Transaction Date</th>
+                <th>Stock</th>
+                <th>Expiration Date</th>
               </thead>
               <tbody>
                 <tr>
                   <td>
-                    {Object.values(listpatientid.ptid)
+                    {Object.values(liststockid.stid)
                       .filter((val) => {
                         if (searchTerm == "") {
-                          //return val;
+                          return val;
                         } else if (
-                          val.PatientName.toLowerCase().includes(
+                          val.DrugName.toLowerCase().includes(
                             searchTerm.toLowerCase()
                           )
                         ) {
@@ -101,18 +95,18 @@ function Assessment() {
                         }
                       })
                       .map((value) => (
-                        <tr key={value.TransactionID}>
-                          <td>{value.PatientID}</td>
+                        <tr key={value.StockID}>
+                          <td>{value.StockID}</td>
                         </tr>
                       ))}
                   </td>
                   <td>
-                    {Object.values(listpatientname.ptnm)
+                    {Object.values(liststockdate.stdt)
                       .filter((val) => {
                         if (searchTerm == "") {
-                          //  return val;
+                          return val;
                         } else if (
-                          val.PatientName.toLowerCase().includes(
+                          val.DrugName.toLowerCase().includes(
                             searchTerm.toLowerCase()
                           )
                         ) {
@@ -120,8 +114,27 @@ function Assessment() {
                         }
                       })
                       .map((value) => (
-                        <tr key={value.TransactionID}>
-                          <td>{value.PatientName}</td>
+                        <tr key={value.StockID}>
+                          <td>{value.StockDate}</td>
+                        </tr>
+                      ))}
+                  </td>
+                  <td>
+                    {Object.values(listdrugid.drid)
+                      .filter((val) => {
+                        if (searchTerm == "") {
+                          return val;
+                        } else if (
+                          val.DrugName.toLowerCase().includes(
+                            searchTerm.toLowerCase()
+                          )
+                        ) {
+                          return val;
+                        }
+                      })
+                      .map((value) => (
+                        <tr key={value.StockID}>
+                          <td>{value.DrugID}</td>
                         </tr>
                       ))}
                   </td>
@@ -129,9 +142,9 @@ function Assessment() {
                     {Object.values(listdrugnames.drNm)
                       .filter((val) => {
                         if (searchTerm == "") {
-                          //  return val;
+                          return val;
                         } else if (
-                          val.PatientName.toLowerCase().includes(
+                          val.DrugName.toLowerCase().includes(
                             searchTerm.toLowerCase()
                           )
                         ) {
@@ -139,18 +152,18 @@ function Assessment() {
                         }
                       })
                       .map((value) => (
-                        <tr key={value.TransactionID}>
+                        <tr key={value.StockID}>
                           <td>{value.DrugName}</td>
                         </tr>
                       ))}
                   </td>
                   <td>
-                    {Object.values(listquantity.quan)
+                    {Object.values(liststock.stk)
                       .filter((val) => {
                         if (searchTerm == "") {
-                          //  return val;
+                          return val;
                         } else if (
-                          val.PatientName.toLowerCase().includes(
+                          val.DrugName.toLowerCase().includes(
                             searchTerm.toLowerCase()
                           )
                         ) {
@@ -158,18 +171,18 @@ function Assessment() {
                         }
                       })
                       .map((value) => (
-                        <tr key={value.TransactionID}>
-                          <td>{value.Quantity}</td>
+                        <tr key={value.StockID}>
+                          <td>{value.TotalStock}</td>
                         </tr>
                       ))}
                   </td>
                   <td>
-                    {Object.values(listcost.cost)
+                    {Object.values(listexpdate.exdt)
                       .filter((val) => {
                         if (searchTerm == "") {
-                          //  return val;
+                          return val;
                         } else if (
-                          val.PatientName.toLowerCase().includes(
+                          val.DrugName.toLowerCase().includes(
                             searchTerm.toLowerCase()
                           )
                         ) {
@@ -177,27 +190,8 @@ function Assessment() {
                         }
                       })
                       .map((value) => (
-                        <tr key={value.TransactionID}>
-                          <td>{value.Cost}</td>
-                        </tr>
-                      ))}
-                  </td>
-                  <td>
-                    {Object.values(listtransdate.trdt)
-                      .filter((val) => {
-                        if (searchTerm == "") {
-                          //  return val;
-                        } else if (
-                          val.PatientName.toLowerCase().includes(
-                            searchTerm.toLowerCase()
-                          )
-                        ) {
-                          return val;
-                        }
-                      })
-                      .map((value) => (
-                        <tr key={value.TransactionID}>
-                          <td>{value.TransactionDate}</td>
+                        <tr key={value.StockID}>
+                          <td>{value.ExpirationDate}</td>
                         </tr>
                       ))}
                   </td>
@@ -212,4 +206,4 @@ function Assessment() {
   );
 }
 
-export default Assessment;
+export default ExpiredMeds;

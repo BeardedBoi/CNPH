@@ -68,7 +68,7 @@ function Issuance() {
   };
 
   const notify = () => {
-    toast.success("Successfully Added", {
+    toast.success("Transaction Successfull!", {
       position: toast.POSITION.BOTTOM_RIGHT,
       autoClose: 3000,
     });
@@ -86,6 +86,7 @@ function Issuance() {
       date: date,
     }).then(() => {
       updatestock();
+      updatepatient();
       notify();
     });
   };
@@ -95,6 +96,13 @@ function Issuance() {
       quantity: quantity,
       stock: stock,
       drugID: drugID,
+    }).then(() => {});
+  };
+
+  const updatepatient = () => {
+    Axios.put("http://192.168.1.74:3001/api/updatepatientissuance", {
+      patientID: patientID,
+      total: total,
     }).then(() => {});
   };
 
