@@ -16,6 +16,7 @@ function Issuance() {
   const [quantity, setquantity] = useState(0);
   const [price, setPrice] = useState(0);
   const [stockID, setstockID] = useState(0);
+  const [currentstock, setcurrentstock] = useState(0);
 
   useEffect(() => {
     Axios.get("http://localhost:3001/api/rettransactID").then((response) => {
@@ -50,12 +51,16 @@ function Issuance() {
         for (let i = 0; i < response.data.length; i++) {
           if (response.data[i].DrugID == drugID) {
             setstockID(response.data[i].StockID);
+            setcurrentstock(response.data[i].TotalStock);
             break;
           }
         }
       })
       .catch((error) => {
-        notifyresult();
+        toast.error("Out of Stock", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: 3000,
+        });
       });
   };
 
@@ -110,21 +115,28 @@ function Issuance() {
   };
 
   const submitForm = () => {
-    Axios.post("http://localhost:3001/api/newissuance", {
-      patientID: patientID,
-      patientName: patientName,
-      drugID: drugID,
-      drugName: drugName,
-      quantity: quantity,
-      total: total,
-      currenttransID: currenttransID + 1,
-      date: date,
-    }).then(() => {
-      updatestockall();
-      updatepatient();
-      updatestock();
-      notify();
-    });
+    if (currentstock < quantity || currentstock == "" || currentstock == 0) {
+      toast.error("Not enough Stock", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+        autoClose: 3000,
+      });
+    } else {
+      Axios.post("http://localhost:3001/api/newissuance", {
+        patientID: patientID,
+        patientName: patientName,
+        drugID: drugID,
+        drugName: drugName,
+        quantity: quantity,
+        total: total,
+        currenttransID: currenttransID + 1,
+        date: date,
+      }).then(() => {
+        updatestockall();
+        updatepatient();
+        updatestock();
+        notify();
+      });
+    }
   };
 
   const updatestockall = () => {
