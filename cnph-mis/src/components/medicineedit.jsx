@@ -14,7 +14,7 @@ function MedicineEdit() {
   const [price, setPrice] = useState("");
 
   const searchbyID = () => {
-    Axios.get("http://192.168.1.74:3001/api/searchmeds").then((response) => {
+    Axios.get("http://localhost:3001/api/searchmeds").then((response) => {
       setdrugName(response.data[(response.data.DrugID = drugID - 1)].DrugName);
       setBrandName(
         response.data[(response.data.DrugID = drugID - 1)].BrandName
@@ -96,7 +96,7 @@ function MedicineEdit() {
   };
 
   const submitForm = () => {
-    Axios.put("http://192.168.1.74:3001/api/updatemeds", {
+    Axios.put("http://localhost:3001/api/updatemeds", {
       drugID: drugID,
       drugName: drugName,
       brandName: brandName,
@@ -175,32 +175,6 @@ function MedicineEdit() {
                     className="font-Comfortaa text-capitalize"
                     value={category}
                     onChange={handleCategory}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label className="my-1 font-Comfortaa">
-                    Production Date
-                  </Form.Label>
-                  <Form.Control
-                    type="date"
-                    placeholder="0.00"
-                    id="txt5"
-                    className="font-Comfortaa"
-                    value={productionDate}
-                    onChange={handlePDate}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label className="my-1 font-Comfortaa">
-                    Expiration Date
-                  </Form.Label>
-                  <Form.Control
-                    type="date"
-                    placeholder="0.00"
-                    id="txt6"
-                    className="font-Comfortaa"
-                    value={expirationDate}
-                    onChange={handleEDate}
                   />
                 </Form.Group>
                 <Form.Group>

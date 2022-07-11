@@ -22,7 +22,7 @@ function Medicine() {
   });
 
   useEffect(() => {
-    Axios.get("http://192.168.1.74:3001/api/get").then((response) => {
+    Axios.get("http://localhost:3001/api/get").then((response) => {
       setCurrentID(response.data[response.data.length - 1].DrugID);
     });
   }, []);
@@ -92,7 +92,7 @@ function Medicine() {
   };
 
   const submitForm = () => {
-    Axios.post("http://192.168.1.74:3001/api/medicineadd", {
+    Axios.post("http://localhost:3001/api/medicineadd", {
       drugID: currentID + 1,
       drugName: drugName,
       brandName: brandName,

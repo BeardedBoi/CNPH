@@ -23,7 +23,7 @@ function ExpiredMeds() {
   const [searchTerm, setsearchTerm] = useState("");
 
   useEffect(() => {
-    Axios.get("http://192.168.1.74:3001/api/expiredret").then((response) => {
+    Axios.get("http://localhost:3001/api/expiredret").then((response) => {
       setliststockid({ stid: response.data });
       setliststockdate({ stdt: response.data });
       setlistdrugnames({ drNm: response.data });

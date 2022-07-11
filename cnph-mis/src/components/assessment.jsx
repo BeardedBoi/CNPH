@@ -27,7 +27,7 @@ function Assessment() {
   const [ptotalcost, setptotalcost] = useState("");
 
   useEffect(() => {
-    Axios.get("http://192.168.1.74:3001/api/assessmentret").then((response) => {
+    Axios.get("http://localhost:3001/api/assessmentret").then((response) => {
       setlistpatientid({ ptid: response.data });
       setlistpatientname({ ptnm: response.data });
       setlistdrugnames({ drNm: response.data });
@@ -38,7 +38,7 @@ function Assessment() {
   }, []);
 
   useEffect(() => {
-    Axios.get("http://192.168.1.74:3001/api/patientret").then((response) => {
+    Axios.get("http://localhost:3001/api/patientret").then((response) => {
       settotalcost({ ttlcst: response.data });
     });
   }, []);

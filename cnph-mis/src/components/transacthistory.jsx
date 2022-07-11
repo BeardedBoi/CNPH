@@ -8,7 +8,7 @@ function TransactHistory() {
   const [listpatientname, setlistpatientname] = useState({ ptnm: [] });
   const [listpatientid, setlistpatientid] = useState({ ptid: [] });
   const [listdrugnames, setlistdrugnames] = useState({ drNm: [] });
-  const [listdrugid, setlistdrugid] = useState({ drid: [] });
+  const [listdrugid, setlistdrugid] = useState({ drid: [] }); 
   const [listquantity, setlistquantity] = useState({ quan: [] });
   const [listcost, setlistcost] = useState({ cst: [] });
   const [listtransactID, setlisttransactID] = useState({ trid: [] });
@@ -16,7 +16,7 @@ function TransactHistory() {
   const [searchTerm, setsearchTerm] = useState("");
 
   useEffect(() => {
-    Axios.get("http://192.168.1.74:3001/api/transactret").then((response) => {
+    Axios.get("http://localhost:3001/api/transactret").then((response) => {
       setlistpatientname({ ptnm: response.data });
       setlistpatientid({ ptid: response.data });
       setlistdrugnames({ drNm: response.data });

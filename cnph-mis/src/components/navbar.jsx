@@ -17,7 +17,6 @@ import {
   Link,
   Routes,
 } from "react-router-dom";
-import cnphlogo from "C:/Users/Digitization2/Documents/react/backup/CNPH/cnph-mis/src/cnphlogo.png";
 import Medicine from "./medicine";
 import Inventory from "./inventory";
 import MedicineSearch from "./medicinesearch";
@@ -58,7 +57,7 @@ function NavBar() {
   const [searchTerm, setsearchTerm] = useState("");
 
   useEffect(() => {
-    Axios.get("http://192.168.1.74:3001/api/patientret").then((response) => {
+    Axios.get("http://localhost:3001/api/patientret").then((response) => {
       setlistpatientname({ ptnm: response.data });
       setlistpatientid({ ptid: response.data });
       setlistpharmatotal({ phttl: response.data });
@@ -66,7 +65,7 @@ function NavBar() {
     });
   }, []);
   useEffect(() => {
-    Axios.get("http://192.168.1.74:3001/api/searchmeds").then((response) => {
+    Axios.get("http://localhost:3001/api/searchmeds").then((response) => {
       setlistdrugid({ drid: response.data });
       setlistdrugnames({ drNm: response.data });
       setlistStock({ stck: response.data });
@@ -80,13 +79,7 @@ function NavBar() {
         <Navbar className="bg-blue-300 text-lg" expand="lg">
           <Container fluid>
             <Navbar.Brand href="#" className="font-KdamThmorPro">
-              <img
-                src={cnphlogo}
-                alt="logo"
-                width="30"
-                height="30"
-                className="d-inline-block align-top"
-              />
+              
               CNPH
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />
@@ -128,7 +121,7 @@ function NavBar() {
                     Edit Medicine
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item as={Link} to={"/medicine-delete"}>
+                  <NavDropdown.Item as={Link} to={"/medicine-delete"} disabled>
                     Dispose
                   </NavDropdown.Item>
                   <NavDropdown.Item as={Link} to={"/medicine-expired"}>

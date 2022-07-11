@@ -5,7 +5,7 @@ const app = express();
 const mysql = require("mysql");
 
 const db = mysql.createConnection({
-  host: "192.168.1.74",
+  host: "localhost",
   user: "root",
   password: "",
   database: "cnphdb",
@@ -264,6 +264,19 @@ app.put("/api/updatepatientissuance", (req, res) => {
     }
   });
 });
+
+app.put("/api/updatestockissuance", (req, res) => {
+  const stockID = req.body.stockID;
+  const quantity = req.body.quantity;
+  const sqlUpdate = "UPDATE stock SET TotalStock = TotalStock - ? WHERE StockID = ?";
+  db.query(sqlUpdate, [quantity, stockID], (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
 //***************************************************************************************************************************************/
 
 app.post("/api/insert", (req, res) => {
@@ -300,6 +313,17 @@ app.get("/api/transactret", (req, res) => {
   const sqlSelect = "SELECT * FROM patient_assessment";
   db.query(sqlSelect, (err, result) => {
     res.send(result);
+  });
+});
+
+app.get("/api/retexp/", (req, res) => {
+  const sqlSelect = "SELECT a.* FROM stock AS a JOIN (SELECT DrugName, Min(StockDate) AS m FROM stock WHERE ExpirationDate > DATE(CURRENT_DATE) AND TotalStock > 0 GROUP BY DrugName) AS b ON ( a.DrugName= b.DrugName AND a.StockDate = b.m ) GROUP BY DrugID;";
+  db.query(sqlSelect, (err, result) => {
+    if (err) {
+      console.log(err)
+    }else{
+      res.send(result);
+    }   
   });
 });
 

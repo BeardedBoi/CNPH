@@ -1,5 +1,6 @@
 import React, { Component, useState, useEffect } from "react";
 import { Container, Form, Row, Col, Button } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import Axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,9 +15,10 @@ function Issuance() {
   const [currenttransID, setCurrentTransID] = useState("");
   const [quantity, setquantity] = useState(0);
   const [price, setPrice] = useState(0);
+  const [stockID, setstockID] = useState(0);
 
   useEffect(() => {
-    Axios.get("http://192.168.1.74:3001/api/rettransactID").then((response) => {
+    Axios.get("http://localhost:3001/api/rettransactID").then((response) => {
       setCurrentTransID(response.data[response.data.length - 1].TransactionID);
     });
   }, []);
@@ -28,20 +30,46 @@ function Issuance() {
 
   //************************ SEARCH MEDS**********************************************
   const searchdrugID = () => {
-    Axios.get("http://192.168.1.74:3001/api/searchmeds").then((response) => {
-      setdrugName(response.data[(response.data.DrugID = drugID - 1)].DrugName);
-      setStock(response.data[(response.data.DrugID = drugID - 1)].Stock);
-      setPrice(response.data[(response.data.DrugID = drugID - 1)].Price);
-    });
+    Axios.get("http://localhost:3001/api/searchmeds")
+      .then((response) => {
+        setdrugName(
+          response.data[(response.data.DrugID = drugID - 1)].DrugName
+        );
+        setStock(response.data[(response.data.DrugID = drugID - 1)].Stock);
+        setPrice(response.data[(response.data.DrugID = drugID - 1)].Price);
+        searchexp();
+      })
+      .catch((error) => {
+        notifyresult();
+      });
+  };
+
+  const searchexp = () => {
+    Axios.get("http://localhost:3001/api/retexp")
+      .then((response) => {
+        for (let i = 0; i < response.data.length; i++) {
+          if (response.data[i].DrugID == drugID) {
+            setstockID(response.data[i].StockID);
+            break;
+          }
+        }
+      })
+      .catch((error) => {
+        notifyresult();
+      });
   };
 
   //****************************RETRIEVE PATIENT ID ****************************************************************************
   const searchpatientID = () => {
-    Axios.get("http://192.168.1.74:3001/api/patientret").then((response) => {
-      setPatientName(
-        response.data[(response.data.PatientID = patientID - 1)].PatientName
-      );
-    });
+    Axios.get("http://localhost:3001/api/patientret")
+      .then((response) => {
+        setPatientName(
+          response.data[(response.data.PatientID = patientID - 1)].PatientName
+        );
+      })
+      .catch((error) => {
+        notifyresult();
+      });
   };
 
   const handleID = (e) => {
@@ -74,8 +102,15 @@ function Issuance() {
     });
   };
 
+  const notifyresult = () => {
+    toast.error("No result", {
+      position: toast.POSITION.BOTTOM_RIGHT,
+      autoClose: 3000,
+    });
+  };
+
   const submitForm = () => {
-    Axios.post("http://192.168.1.74:3001/api/newissuance", {
+    Axios.post("http://localhost:3001/api/newissuance", {
       patientID: patientID,
       patientName: patientName,
       drugID: drugID,
@@ -85,14 +120,15 @@ function Issuance() {
       currenttransID: currenttransID + 1,
       date: date,
     }).then(() => {
-      updatestock();
+      updatestockall();
       updatepatient();
+      updatestock();
       notify();
     });
   };
 
-  const updatestock = () => {
-    Axios.put("http://192.168.1.74:3001/api/updateissuance", {
+  const updatestockall = () => {
+    Axios.put("http://localhost:3001/api/updateissuance", {
       quantity: quantity,
       stock: stock,
       drugID: drugID,
@@ -100,9 +136,16 @@ function Issuance() {
   };
 
   const updatepatient = () => {
-    Axios.put("http://192.168.1.74:3001/api/updatepatientissuance", {
+    Axios.put("http://localhost:3001/api/updatepatientissuance", {
       patientID: patientID,
       total: total,
+    }).then(() => {});
+  };
+
+  const updatestock = () => {
+    Axios.put("http://localhost:3001/api/updatestockissuance", {
+      quantity: quantity,
+      stockID: stockID,
     }).then(() => {});
   };
 
@@ -224,7 +267,7 @@ function Issuance() {
                       </Form.Label>
                       <Form.Control
                         type="number"
-                        id="txt2"
+                        min="0"
                         className="font-Comfortaa text-capitalize"
                         value={quantity}
                         onChange={handlequantity}

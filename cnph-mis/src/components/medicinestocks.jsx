@@ -19,7 +19,7 @@ function MedicineStock() {
   const [addtotal, setaddtotal] = useState(0);
 
   useEffect(() => {
-    Axios.get("http://192.168.1.74:3001/api/stockret").then((response) => {
+    Axios.get("http://localhost:3001/api/stockret").then((response) => {
       setCurrentID(response.data[response.data.length - 1].StockID);
     });
   }, []);
@@ -30,7 +30,7 @@ function MedicineStock() {
   }-${current.getDate()}`;
 
   const searchdrugID = () => {
-    Axios.get("http://192.168.1.74:3001/api/searchmeds").then((response) => {
+    Axios.get("http://localhost:3001/api/searchmeds").then((response) => {
       setdrugName(response.data[(response.data.DrugID = drugID - 1)].DrugName);
       setTotal(response.data[(response.data.DrugID = drugID - 1)].Stock);
     });
@@ -101,7 +101,7 @@ function MedicineStock() {
   };
 
   const submitForm = () => {
-    Axios.put("http://192.168.1.74:3001/api/updatestock", {
+    Axios.put("http://localhost:3001/api/updatestock", {
       newpcs: newpcs,
       newbundles: newbundles,
       newboxes: newboxes,
@@ -113,7 +113,7 @@ function MedicineStock() {
   };
 
   const addtostock = () => {
-    Axios.post("http://192.168.1.74:3001/api/newstock", {
+    Axios.post("http://localhost:3001/api/newstock", {
       stockID: currentID + 1,
       drugID: drugID,
       date: date,
