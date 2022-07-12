@@ -52,7 +52,7 @@ function Inventory() {
                   <Form.Label>Full Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="ex. Kiryuu Coco"
+                    placeholder="Full name"
                     id="ex2"
                     className="text-capitalize"
                     value={patientName}

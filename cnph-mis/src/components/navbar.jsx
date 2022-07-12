@@ -79,7 +79,6 @@ function NavBar() {
         <Navbar className="bg-blue-300 text-lg" expand="lg">
           <Container fluid>
             <Navbar.Brand href="#" className="font-KdamThmorPro">
-              
               CNPH
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />
@@ -98,7 +97,7 @@ function NavBar() {
                 </Nav.Link>
 
                 <Nav.Link
-                  className="hover:bg-blue-400 rounded font-JosefinSans"
+                  className="rounded font-JosefinSans cursor-pointer hover:text-white hover:bg-blue-400"
                   as={Link}
                   to={"/patient-info"}
                 >
@@ -121,11 +120,11 @@ function NavBar() {
                     Edit Medicine
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item as={Link} to={"/medicine-delete"} disabled>
+                  <NavDropdown.Item as={Link} to={"/medicine-delete"}>
                     Dispose
                   </NavDropdown.Item>
                   <NavDropdown.Item as={Link} to={"/medicine-expired"}>
-                    See expired
+                    Inventory Assessment
                   </NavDropdown.Item>
                   <NavDropdown.Item as={Link} to={"/medicine-stock"}>
                     Add Stocks

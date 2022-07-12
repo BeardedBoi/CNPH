@@ -108,17 +108,15 @@ app.post("/api/newstock", (req, res) => {
   const bundles = req.body.newbundles;
   const boxes = req.body.newboxes;
   const compName = req.body.compName;
-  const date = req.body.date;
   const proddate = req.body.proddate;
   const expdate = req.body.expdate;
   const addtotal = req.body.addtotal;
   const sqlUpdate =
-    "INSERT INTO stock (StockID, StockDate, DrugID, DrugName, Pcs, Bundles, Box, CompanyName, ProductionDate, ExpirationDate, TotalStock) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO stock (StockID, StockDate, DrugID, DrugName, Pcs, Bundles, Box, CompanyName, ProductionDate, ExpirationDate, TotalStock, Status) VALUES (?,DATE(CURRENT_DATE),?,?,?,?,?,?,?,?,?,'Active')";
   db.query(
     sqlUpdate,
     [
       stockID,
-      date,
       drugID,
       drugName,
       pcs,
@@ -303,7 +301,14 @@ app.get("/api/assessmentret", (req, res) => {
 });
 
 app.get("/api/expiredret", (req, res) => {
-  const sqlSelect = "SELECT * FROM `stock` WHERE ExpirationDate < CURRENT_DATE";
+  const sqlSelect = "SELECT * FROM `stock`";
+  db.query(sqlSelect, (err, result) => {
+    res.send(result);
+  });
+});
+
+app.get("/api/expiredret2", (req, res) => {
+  const sqlSelect = "SELECT * FROM `stock` WHERE ExpirationDate < DATE(CURRENT_DATE)";
   db.query(sqlSelect, (err, result) => {
     res.send(result);
   });
@@ -325,6 +330,41 @@ app.get("/api/retexp/", (req, res) => {
       res.send(result);
     }   
   });
+});
+
+app.put("/api/disposestock", (req, res) => {
+  const stockID = req.body.stockID
+  const sqlUpdate =
+    "UPDATE `stock` SET Pcs = 0, Bundles = 0, Box = 0, TotalStock = 0, Status = 'Disposed' WHERE StockID = ?";
+  db.query(
+    sqlUpdate,
+    [stockID],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
+app.put("/api/disposemeds", (req, res) => {
+  const drugID = req.body.drugID
+  const total = req.body.total
+  const sqlUpdate =
+    "UPDATE `medicine` SET Stock = Stock - ? WHERE DrugID = ?";
+  db.query(
+    sqlUpdate,
+    [total, drugID],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
 });
 
 app.listen(3001, () => {

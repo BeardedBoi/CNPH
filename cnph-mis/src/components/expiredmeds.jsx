@@ -21,8 +21,26 @@ function ExpiredMeds() {
   const [liststock, setliststock] = useState({ stk: [] });
   const [listexpdate, setlistexpdate] = useState({ exdt: [] });
   const [searchTerm, setsearchTerm] = useState("");
+  const [toggle, settoggle] = useState(false);
+  const [liststatus, setliststatus] = useState({ sts: [] });
 
   useEffect(() => {
+    overallswitch();
+  }, []);
+
+  const toggledisplay = () => {
+    toggle ? settoggle(false) : settoggle(true);
+  };
+
+  const trytoggle = () => {
+    if (toggle == true) {
+      overallswitch();
+    } else {
+      expiredswitch();
+    }
+  };
+
+  const overallswitch = () => {
     Axios.get("http://localhost:3001/api/expiredret").then((response) => {
       setliststockid({ stid: response.data });
       setliststockdate({ stdt: response.data });
@@ -30,20 +48,28 @@ function ExpiredMeds() {
       setlistdrugid({ drid: response.data });
       setliststock({ stk: response.data });
       setlistexpdate({ exdt: response.data });
+      setliststatus({ sts: response.data });
     });
-  }, []);
+  };
 
-  const current = new Date();
-  const date = `${current.getFullYear()}-${
-    current.getMonth() + 1
-  }-${current.getDate()}`;
+  const expiredswitch = () => {
+    Axios.get("http://localhost:3001/api/expiredret2").then((response) => {
+      setliststockid({ stid: response.data });
+      setliststockdate({ stdt: response.data });
+      setlistdrugnames({ drNm: response.data });
+      setlistdrugid({ drid: response.data });
+      setliststock({ stk: response.data });
+      setlistexpdate({ exdt: response.data });
+      setliststatus({ sts: response.data });
+    });
+  };
 
   return (
     <div>
       <div className="text-4xl text-green-500 my-5 font-bold text-center font-JosefinSans">
-        EXPIRED MEDICINES
+        INVENTORY
       </div>
-      <div className="p-6 max-w-2xl bg-white rounded-xl shadow-lg flex items-center space-x-3 my-2 mx-auto">
+      <div className="p-6 max-w-3xl bg-white rounded-xl shadow-lg flex items-center space-x-3 my-2 mx-auto">
         <Container>
           <Form>
             <Col>
@@ -55,15 +81,24 @@ function ExpiredMeds() {
                       <Form.Label className="my-1 font-Comfortaa ">
                         Search Drug Name
                       </Form.Label>
-                      <Form.Control
-                        type="TEXT"
-                        min="0"
-                        className="text-capitalize font-Comfortaa"
-                        onChange={(event) => {
-                          setsearchTerm(event.target.value);
-                        }}
-                      />
                     </Col>
+                    <Col>
+                      <Form.Check
+                        type="switch"
+                        label="See Expired"
+                        onClick={toggledisplay}
+                        onChange={trytoggle}
+                      />
+                      {toggle ? expiredswitch : overallswitch}
+                    </Col>
+                    <Form.Control
+                      type="TEXT"
+                      min="0"
+                      className="text-capitalize font-Comfortaa"
+                      onChange={(event) => {
+                        setsearchTerm(event.target.value);
+                      }}
+                    />
                   </Row>
                   <Form.Label className="my-1 font-Comfortaa"></Form.Label>
                 </Form.Group>
@@ -78,6 +113,7 @@ function ExpiredMeds() {
                 <th>Drug Name</th>
                 <th>Stock</th>
                 <th>Expiration Date</th>
+                <th>Status</th>
               </thead>
               <tbody>
                 <tr>
@@ -192,6 +228,25 @@ function ExpiredMeds() {
                       .map((value) => (
                         <tr key={value.StockID}>
                           <td>{value.ExpirationDate}</td>
+                        </tr>
+                      ))}
+                  </td>
+                  <td>
+                    {Object.values(liststatus.sts)
+                      .filter((val) => {
+                        if (searchTerm == "") {
+                          return val;
+                        } else if (
+                          val.DrugName.toLowerCase().includes(
+                            searchTerm.toLowerCase()
+                          )
+                        ) {
+                          return val;
+                        }
+                      })
+                      .map((value) => (
+                        <tr key={value.StockID}>
+                          <td>{value.Status}</td>
                         </tr>
                       ))}
                   </td>
